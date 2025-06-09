@@ -1,0 +1,23 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #111;
+  color: #eee;
+  margin: 0;
+  padding: 20px;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 10px;
+}
+.counter {
+  margin-top: 30px;
+}
+footer {
+  margin-top: 40px;
+  font-size: 14px;
+}
+a {
+  color: #0af;
+}
