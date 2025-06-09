@@ -2,23 +2,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Pi Idle Clicker</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pi Idle Clicker</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>⚡ Pi Node Clicker ⚡</h1>
-        <div id="coin-container">
-            <img src="assets/images/coin.png" id="coin" alt="Coin" />
-        </div>
-        <div id="stats">
-            <p>Coins: <span id="coin-count">0</span></p>
-            <p>Coins/sec: <span id="cps">0</span></p>
-        </div>
-        <div id="upgrades"></div>
-    </div>
-    <script src="script.js"></script>
+  <h1>⚡ Pi Node Clicker ⚡</h1>
+  <div id="game">
+    <img src="coin.gif" id="coin" />
+    <p>Coins: <span id="coins">0</span></p>
+    <p>Coins per second: <span id="cps">0</span></p>
+    <div id="upgrades"></div>
+    <h2>Leaderboard</h2>
+    <div id="leaderboard"></div>
+  </div>
+  <audio id="clickSound" src="click.wav" preload="auto"></audio>
+  <audio id="bgMusic" src="bg_music.mp3" preload="auto" loop autoplay></audio>
+  <script src="script.js"></script>
 </body>
 </html>

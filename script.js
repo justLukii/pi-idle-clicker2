@@ -1,59 +1,80 @@
 
-let coins = parseFloat(localStorage.getItem("coins")) || 0;
-let cps = parseFloat(localStorage.getItem("cps")) || 0;
-let upgrades = [
-    { name: "Node v1", cost: 10, value: 0.2 },
-    { name: "Node v2", cost: 50, value: 1 },
-    { name: "Node Cluster", cost: 200, value: 4 },
+let coins = parseFloat(localStorage.getItem('coins')) || 0;
+let cps = parseFloat(localStorage.getItem('cps')) || 0;
+let upgrades = JSON.parse(localStorage.getItem('upgrades')) || [
+  { name: "Node v1", cost: 10, value: 1, owned: 0, img: "node1.png" },
+  { name: "Node v2", cost: 100, value: 10, owned: 0, img: "node2.png" },
+  { name: "Cluster", cost: 1000, value: 50, owned: 0, img: "cluster.png" },
+  { name: "Mega Cluster", cost: 5000, value: 200, owned: 0, img: "megacluster.png" }
 ];
 
-const coinCount = document.getElementById("coin-count");
-const cpsDisplay = document.getElementById("cps");
-const upgradesDiv = document.getElementById("upgrades");
-const coin = document.getElementById("coin");
+let clickSound = document.getElementById("clickSound");
 
-const clickSound = new Audio("assets/sounds/click.mp3");
-
-function updateUI() {
-    coinCount.textContent = coins.toFixed(1);
-    cpsDisplay.textContent = cps.toFixed(1);
-    upgradesDiv.innerHTML = "";
-    upgrades.forEach((upg, i) => {
-        const btn = document.createElement("button");
-        btn.textContent = `${upg.name} (${upg.cost} 🪙)`;
-        btn.onclick = () => buyUpgrade(i);
-        upgradesDiv.appendChild(btn);
-    });
+function updateDisplay() {
+  document.getElementById("coins").textContent = Math.floor(coins);
+  document.getElementById("cps").textContent = cps.toFixed(1);
+  localStorage.setItem("coins", coins);
+  localStorage.setItem("cps", cps);
+  localStorage.setItem("upgrades", JSON.stringify(upgrades));
 }
 
-function buyUpgrade(index) {
-    const upgrade = upgrades[index];
-    if (coins >= upgrade.cost) {
-        coins -= upgrade.cost;
-        cps += upgrade.value;
-        upgrade.cost = Math.ceil(upgrade.cost * 1.4);
-        saveGame();
-        updateUI();
-    }
+function createUpgradeButtons() {
+  let container = document.getElementById("upgrades");
+  container.innerHTML = "";
+  upgrades.forEach((upg, index) => {
+    let btn = document.createElement("button");
+    btn.innerHTML = `<img class="icon" src="${upg.img}" /> ${upg.name}<br>Owned: ${upg.owned} | Cost: ${Math.floor(upg.cost)}`;
+    btn.onclick = () => {
+      if (coins >= upg.cost) {
+        coins -= upg.cost;
+        upg.owned += 1;
+        cps += upg.value;
+        upg.cost = Math.floor(upg.cost * 1.5);
+        updateDisplay();
+        createUpgradeButtons();
+      }
+    };
+    container.appendChild(btn);
+  });
 }
 
-coin.onclick = () => {
-    coins += 1;
-    clickSound.play();
-    saveGame();
-    updateUI();
+document.getElementById("coin").onclick = () => {
+  coins += 1;
+  clickSound.currentTime = 0;
+  clickSound.play();
+  updateDisplay();
+  saveHighscore();
 };
 
-function passiveGain() {
-    coins += cps / 10;
-    saveGame();
-    updateUI();
+setInterval(() => {
+  coins += cps / 10;
+  updateDisplay();
+}, 100);
+
+// Rangliste (lokal, 5 Einträge)
+function saveHighscore() {
+  let scores = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  let name = localStorage.getItem("username");
+  if (!name) {
+    name = prompt("Enter your name:");
+    localStorage.setItem("username", name);
+  }
+  scores = scores.filter(entry => entry.name !== name);
+  scores.push({ name, coins: Math.floor(coins) });
+  scores.sort((a, b) => b.coins - a.coins);
+  scores = scores.slice(0, 5);
+  localStorage.setItem("leaderboard", JSON.stringify(scores));
+  renderLeaderboard(scores);
 }
 
-function saveGame() {
-    localStorage.setItem("coins", coins);
-    localStorage.setItem("cps", cps);
+function renderLeaderboard(scores) {
+  let container = document.getElementById("leaderboard");
+  container.innerHTML = "";
+  scores.forEach((entry, idx) => {
+    container.innerHTML += `<p>${idx + 1}. ${entry.name} - ${entry.coins} Coins</p>`;
+  });
 }
 
-setInterval(passiveGain, 100);
-updateUI();
+createUpgradeButtons();
+updateDisplay();
+renderLeaderboard(JSON.parse(localStorage.getItem("leaderboard") || "[]"));
