@@ -1,23 +1,38 @@
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #111;
-  color: #eee;
-  margin: 0;
-  padding: 20px;
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background-color: #0f0f23;
+    color: #39ff14;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
+
+.container {
+    text-align: center;
+}
+
+#coin {
+    width: 120px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+#coin:active {
+    transform: scale(0.95);
+}
+
+#upgrades {
+    margin-top: 20px;
+}
+
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin: 10px;
-}
-.counter {
-  margin-top: 30px;
-}
-footer {
-  margin-top: 40px;
-  font-size: 14px;
-}
-a {
-  color: #0af;
+    background: #1e1e2f;
+    border: 1px solid #39ff14;
+    color: #39ff14;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
 }
